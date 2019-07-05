@@ -1,39 +1,36 @@
-console.log('is this thing on?');
+// console.log('is thiss thing on?');
 
+/* initializes variables */
 let map, key;
 
-// let myLatlng = new google.maps.LatLng(-34.397, 150.644);
+/* initalizes the map */
+function getMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(-34.397, 150.644),
+          zoom: 8,
+          mapTypeId: 'satellite'
+    });
+}
 
 
+/* query to send to the api */
 const sendIt = {
     place: "boulder, co",
     what: "bars"
 }
 
 
-// let mapOptions = {
-//   zoom: 8,
-//   center: new google.maps.LatLng(-34.397, 150.644),
-//   mapTypeId: 'satellite'
-// };
-
-
-function getMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8
-    });
-}
-
-
 $(document).ready(function() {
-
+    /* grabs the api key */
     $.post('/getIt', sendIt, (data) => {
-        // console.log('from the server --> ', data.key);
+        key = data.key
+
+        /* builds the script tag */
+        let s = document.createElement('script');
+        s.type = "text/javascript";
+        s.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=getMap`
+        $('body').append(s);
     });
-
-
-
 
 
 })  // z $(document).ready()
