@@ -2,14 +2,13 @@ const express = require('express');
 const app = express();
 const request = require('request');
 const bodyParser = require('body-parser');
+const goog = require('@google/maps');
 
 const dotenv = require('dotenv').config();
 const creds = process.env.creds
 
-// const goog = require('googleapis');
 
-// const googleData = require('./public/googleData');
-
+const key = process.env.key1
 
 
 app.use(express.static('./public'));
@@ -19,14 +18,20 @@ app.use(bodyParser.json());
 
 
 app.get('/', function(req, res) {
-    console.log('creds -->  ', creds);
     res.sendFile('./public/html/index.html', { root: './' });
 });
 
 
-app.get('/test', function(req, res) {
-    console.log('creds -->  ', creds);
-    res.send('you did it');
+app.post('/getIt', function(req, res) {
+    console.log(req.body.place)
+    let place = req.body.place;
+    let what = req.body.what;
+    
+    // request({
+    //
+    // });
+
+    res.send({key:key})
 });
 
 
@@ -40,6 +45,6 @@ app.use(function(req,res) { // works
 })
 
 /* -=-=-=-=-=-=- app listen -=-=-=-=-=-=- */
-app.listen(8081, function () {  // works
-    console.log('app running on port 8081')
+app.listen(8080, function () {  // works
+    console.log('app running on port 8080')
 })
