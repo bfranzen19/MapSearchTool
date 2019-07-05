@@ -28,13 +28,24 @@
     <body>
         <!-- vue div -->
         <div id="app">
-            <!-- input box -->
+            <div id="form">
+                <!-- input box -->
+                <input v-model="place" placeholder="enter a location"/>
 
-            <!-- type -->
+                <!-- type -->
+                <select v-model="toDo">
+                    <option disabled value="">please select one</option>
+                    <option>bars</option>
+                    <option>happy hour</option>
+                    <option>other things</option>
+                </select>
 
-            <!-- search button -->
+                <!-- search button -->
+                <button v-on:click="sendTheReq">search</button>
+            </div>
 
-            
+
+
             <!-- main container -->
             <div class="container">
                 <div id="map"></div>

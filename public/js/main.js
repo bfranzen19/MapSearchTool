@@ -20,13 +20,31 @@ function getMap() {
 // }
 
 
-var app = new Vue({
+const app = new Vue({
     el: `#app`,
     data: {
-        title: `let's get searchin'!`
-    },
+        place: '',
+        toDo: '',
+
+        // search: {
+        //     place: this.place,
+        //     toDo: this.toDo,
+        // },
+
+    },  // z data
 
     methods: {
+        sendTheReq: function() {
+            if(!this.place) {
+                alert('enter a place to search')
+            } else if(!this.toDo) {
+                alert('select something to do')
+            } else {
+                $.post('/searchIt', { place: this.place, toDo: this.toDo }, function(dataFromServer) {
+                    console.log('dataFromServer -->> ', dataFromServer)
+                })
+            }
+        },
         getKeyBuildScript: function() {
             $.post('/getIt', (data) => {
                 key = data.key

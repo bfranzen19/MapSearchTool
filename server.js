@@ -2,12 +2,10 @@ const express = require('express');
 const app = express();
 const request = require('request');
 const bodyParser = require('body-parser');
-const goog = require('@google/maps');
 
+/* allows api keys to be hidden */
 const dotenv = require('dotenv').config();
-const creds = process.env.creds
-
-
+/* accesses the api key */
 const key = process.env.key1
 
 
@@ -16,17 +14,37 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-
+/* sends the index.html file from the '/' route */
 app.get('/', function(req, res) {
     res.sendFile('./public/html/index.html', { root: './' });
 });
 
 
-app.post('/getIt', function(req, res) {
-    console.log(req.body.place)
-    let place = req.body.place;
-    let what = req.body.what;
+/* makes the api call to google maps */
+app.post('/searchIt', function(req,res) {
+    /* builds the query string*/
+    let query = req.body.toDo + ' ' + req.body.place
 
+    request({
+        url: `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&rankby=prominence&key=${key}`
+    },
+    function(error, response, body) {
+        if(error || (response.statusCode !== 200)) {
+            console.log(`here's the error: `, error);
+            console.log(`here's the status code: `, response.statusCode);
+            res.send(`oops, something went wrong`)
+        } else {
+            let bod = JSON.parse(body)
+            let top20 = Array.from(bod.results);
+
+            res.send(top20);
+        }
+    });
+})
+
+
+/* accesses the api key */
+app.post('/getIt', function(req, res) {
     res.send({key:key})
 });
 
