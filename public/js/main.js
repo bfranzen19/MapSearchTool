@@ -14,23 +14,34 @@ function getMap() {
 
 
 /* query to send to the api */
-const sendIt = {
-    place: "boulder, co",
-    what: "bars"
-}
+// const sendIt = {
+//     place: "boulder, co",
+//     what: "bars"
+// }
 
 
-$(document).ready(function() {
-    /* grabs the api key */
-    $.post('/getIt', sendIt, (data) => {
-        key = data.key
+var app = new Vue({
+    el: `#app`,
+    data: {
+        title: `let's get searchin'!`
+    },
 
-        /* builds the script tag */
-        let s = document.createElement('script');
-        s.type = "text/javascript";
-        s.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=getMap`
-        $('body').append(s);
-    });
+    methods: {
+        getKeyBuildScript: function() {
+            $.post('/getIt', (data) => {
+                key = data.key
 
+                /* builds the script tag */
+                let s = document.createElement('script');
+                s.type = "text/javascript";
+                s.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=getMap`
+                $('body').append(s);
+            });
+        },
+    },  // z methods
 
-})  // z $(document).ready()
+    beforeMount() {
+        this.getKeyBuildScript()  // runs the getMap() on load
+    },  // z beforeMount()
+
+}) // z vue

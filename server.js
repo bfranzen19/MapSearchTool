@@ -26,10 +26,6 @@ app.post('/getIt', function(req, res) {
     console.log(req.body.place)
     let place = req.body.place;
     let what = req.body.what;
-    
-    // request({
-    //
-    // });
 
     res.send({key:key})
 });
