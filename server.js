@@ -3,9 +3,8 @@ const app = express();
 const request = require('request');
 const bodyParser = require('body-parser');
 
-/* allows api keys to be hidden */
+/* allows api keys to be hidden & accesses the api key */
 const dotenv = require('dotenv').config();
-/* accesses the api key */
 const key = process.env.key1
 
 
@@ -36,6 +35,7 @@ app.post('/searchIt', function(req,res) {
         } else {
             let bod = JSON.parse(body)
             let top20 = Array.from(bod.results);
+            console.log(top20.length);
 
             res.send(top20);
         }
@@ -47,8 +47,6 @@ app.post('/searchIt', function(req,res) {
 app.post('/getIt', function(req, res) {
     res.send({key:key})
 });
-
-
 
 
 

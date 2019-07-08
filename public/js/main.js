@@ -10,14 +10,10 @@ function getMap() {
           zoom: 8,
           mapTypeId: 'satellite'
     });
+    // let autocomplete = new google.maps.places.Autocomplete($('#place').val());
 }
 
 
-/* query to send to the api */
-// const sendIt = {
-//     place: "boulder, co",
-//     what: "bars"
-// }
 
 
 const app = new Vue({
@@ -25,18 +21,12 @@ const app = new Vue({
     data: {
         place: '',
         toDo: '',
-
-        // search: {
-        //     place: this.place,
-        //     toDo: this.toDo,
-        // },
-
     },  // z data
 
     methods: {
         sendTheReq: function() {
             if(!this.place) {
-                alert('enter a place to search')
+                alert('enter a place to search');
             } else if(!this.toDo) {
                 alert('select something to do')
             } else {
@@ -52,9 +42,12 @@ const app = new Vue({
                 /* builds the script tag */
                 let s = document.createElement('script');
                 s.type = "text/javascript";
-                s.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=getMap`
+                s.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&callback=getMap`
                 $('body').append(s);
             });
+        },
+        setAutoComplete: function() {
+            let autocomplete = new google.maps.places.Autocomplete(document.getElementById('place'));
         },
     },  // z methods
 
