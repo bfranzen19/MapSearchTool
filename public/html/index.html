@@ -28,14 +28,14 @@
 
     <body>
         <!-- vue div -->
-        <div id="app">
+        <div id="app" class="container">
             <div id="form">
                 <!-- type -->
                 <input id="placeInput" class="formData" type="text" placeholder="enter a location" onfocus=" "/>
 
                 <!-- input box -->
-                <select id="toDo" class="formData">
-                    <option>select one</option>
+                <select id="toDo" class="formData select">
+                    <option selected disabled>select one</option>
                     <option>bar</option>
                     <option>happy hour</option>
                     <option>restaurant</option>
@@ -48,15 +48,20 @@
 
 
             <!-- main container -->
-            <div class="container">
+            <div>
                 <div id="map"></div>
             </div>
             <!-- z main container -->
 
-
+<!-- ['name', 'rating', 'opening_hours', 'formatted_address', 'price_level'] -->
             <!-- results -->
             <div id="results">
-
+                <search-results
+                v-for="item in dataArr"
+                v-bind:key="item.id"
+                v-bind:name="item.name"
+                v-bind:rating="item.rating"
+                ></search-results>
             </div>
 
         </div>

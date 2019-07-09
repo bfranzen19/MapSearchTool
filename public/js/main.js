@@ -1,4 +1,25 @@
-// console.log('is thiss thing on?');
+/*
+todo:
+    - template the results below map
+    - better drop down
+    - click listener / pin popup
+    - further style map / markers
+
+done:
+    - map loads correctly
+    - map loads in correct location (whether or not location data is
+        accessible)
+    - zooms to new area with search
+    - initial styling
+    - vue is up and running
+    - api key is stored elsewhere but available for API call
+    - autocomplete hooked up and working
+    - jquery used to grab user input and pass to vue
+    - makes api call and returns results
+    - handles for errors in no results found
+    - handles for blank input from the user into the searchTerm
+*/
+
 
 /* initializes variables */
 let map, key;
@@ -27,7 +48,7 @@ function getMap() {
     autocomplete.bindTo('bounds', map);
 }
 
-/* initalizes the map */
+/* initalizes the map, grabs the key, builds the script, builds the query from user input, and calls the vue method to send the request to the server */
 $(document).ready(function() {
     /* send the autocomplete data to vue */
     $('#searchBtn').on('click', function(event) {
@@ -38,12 +59,13 @@ $(document).ready(function() {
             placeInput: $('#placeInput').val(),
             toDo: $('#toDo').val(),
         }
+        // console.log(searchTerm)
 
         /* send the searchTerm to the vue method to make the API call */
         app.sendTheReq(searchTerm);
     })
 
-    /* gets the API key and builds the script */
+    /* gets the API key and builds the script to initialize the map */
     $.post('/getIt', (data) => {
         key = data.key
 
@@ -56,6 +78,21 @@ $(document).ready(function() {
 });
 
 
+Vue.component('search-results', {
+    template:`
+    <div class="card border-secondary mb-3">
+        <div class="card-header"> {{ name }} </div>
+        <div class="card-body text-secondary">
+            <h5 class="card-title"> {{ formatted_address }} </h5>
+            <p class="card-text"> rating: {{ rating }} </p>
+            <p class="card-text"> {{ opening_hours }} </p>
+            <p class="card-text"> {{ price_level }} </p>
+        </div>
+    </div>
+    `,
+    props: ['id', 'name', 'rating', 'opening_hours', 'formatted_address', 'price_level']
+})
+
 
 /* vue instance */
 const app = new Vue({
@@ -63,21 +100,23 @@ const app = new Vue({
     data: {
         placeInput: placeInput,
         toDo: toDo,
+        pinArr: [],
+        dataArr:[],
     },  // z data
 
     methods: {
         /* sends the request from the client to the server where the server makes the API call to google and then returns the reuslts */
         sendTheReq: function(searchTerm) {
-            if(!this.placeInput > 0) {
+            if(!searchTerm.placeInput > 0) {
                 alert('enter a place to search');
-            } else if(!this.toDo) {
+            } else if(searchTerm.toDo === 'select one' || searchTerm.toDo === '' || searchTerm.toDo === null) {
                 alert('select something to do')
             } else {
                 $.post('/searchIt', searchTerm, function(dataFromServer) {
                     /* error handling for the event that no locations are returned */
                     if(dataFromServer.length > 0) {
                     /* push results from api call into array */
-                        let resultsArr = dataFromServer.map((element, index) => {
+                        pinArr = dataFromServer.map((element, index) => {
                             /* sets the zoom and map center based on the 0th result from the server */
                             if(index === 0) {
                                 map.setZoom(12);
@@ -90,11 +129,28 @@ const app = new Vue({
                                 map: map
                             }));
                         })
+
+                        let dataArr = [];
+// ['name', 'rating', 'opening_hours', 'formatted_address', 'price_level']
+                        for(let item of dataFromServer) {
+                            app.dataArr.push({
+                                id: item.id,
+                                name: item.name,
+                                rating: item.rating,
+                                opening_hours: item.opening_hours,
+                                formatted_address: item.formatted_address,
+                                price_level: item.price_level,
+                            })
+                        }
+                        // console.log('data array -->> ', dataArr[0].name, dataArr[0].rating, dataArr[0].opening_hours, dataArr[0].formatted_address, dataArr[0].price_level);
+
+                        // console.log('full arr  ', dataArr)
+
                     } else {
                         alert('sorry, no locations were found in that area. please try searching a new location or new type of location.')
                     }
 
-                    // console.log('dataFromServer -->> ', dataFromServer)
+                    console.log('dataFromServer -->> ', dataFromServer)
                 })
             }
         },
