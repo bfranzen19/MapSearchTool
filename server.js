@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv').config();
 const key = process.env.key1
 
-
 app.use(express.static('./public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -22,7 +21,7 @@ app.get('/', function(req, res) {
 /* makes the api call to google maps */
 app.post('/searchIt', function(req,res) {
     /* builds the query string*/
-    let query = req.body.toDo + ' ' + req.body.place
+    let query = req.body.toDo + ' ' + req.body.placeInput
 
     request({
         url: `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&rankby=prominence&key=${key}`
@@ -35,7 +34,6 @@ app.post('/searchIt', function(req,res) {
         } else {
             let bod = JSON.parse(body)
             let top20 = Array.from(bod.results);
-            console.log(top20.length);
 
             res.send(top20);
         }

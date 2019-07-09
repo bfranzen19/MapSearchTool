@@ -29,20 +29,31 @@
     <body>
         <!-- vue div -->
         <div id="app">
-            <div id="form">
-                <!-- input box -->
-                <input id="place" type="text" class="formData" v-model="place" v-on:keyup="setAutoComplete" placeholder="enter a location"/>
-
+            <div id="form" class="formData">
                 <!-- type -->
-                <select class="formData" v-model="toDo">
+                <!-- <select v-model="toDo" class="formData">
+                    <option disabled value="">select one</option>
+                    <option>bars</option>
+                    <option>happy hour</option>
+                    <option>other things</option>
+                </select> -->
+
+                <select id="toDo" >
                     <option disabled value="">select one</option>
                     <option>bars</option>
                     <option>happy hour</option>
                     <option>other things</option>
                 </select>
 
+                <!-- input box -->
+                <!-- <input id="placeInput" type="text" class="formData" placeholder="enter a location" onfocus=" " v-on:click="setReq"/> -->
+
+                <input id="placeInput" type="text" placeholder="enter a location" onfocus=" "/>
+
                 <!-- search button -->
-                <button type="button" class="formData btn btn-outline-success" v-on:click="sendTheReq">search</button>
+                <!-- <button type="button" class="formData btn btn-outline-success" v-on:click="sendTheReq">search</button> -->
+
+                <button type="button" id="searchBtn" class="btn btn-outline-success">search</button>
             </div>
             <!-- z form -->
 
