@@ -19,19 +19,6 @@ function getMap() {
 
 /* initalizes the map */
 $(document).ready(function() {
-    // function getMap() {
-    //     map = new google.maps.Map(document.getElementById('map'), {
-    //           center: new google.maps.LatLng(-34.397, 150.644),
-    //           zoom: 8,
-    //           mapTypeId: 'satellite'
-    //     });
-    //
-    //     /* autocomplete */
-    //     let input = document.getElementById('placeInput')
-    //     var autocomplete = new google.maps.places.Autocomplete(input);
-    //     autocomplete.bindTo('bounds', map);
-    // }
-
     /* send the autocomplete data to vue */
     $('#searchBtn').on('click', function(event) {
         event.preventDefault();
@@ -46,7 +33,7 @@ $(document).ready(function() {
             toDo: $('#toDo').val(),
         }
 
-        console.log('-->>> ', app.$data, '\n searchTerm  ', searchTerm)
+        // console.log('-->>> ', app.$data, '\n searchTerm  ', searchTerm)
 
         app.sendTheReq(searchTerm);
     })
@@ -74,21 +61,8 @@ const app = new Vue({
     },  // z data
 
     methods: {
-        // getKeyBuildScript: function() {
-        //     $.post('/getIt', (data) => {
-        //         key = data.key
-        //
-        //         /* builds the script tag */
-        //         let s = document.createElement('script');
-        //         s.type = "text/javascript";
-        //         s.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&callback=getMap`
-        //         $('body').append(s);
-        //     });
-        // },
-
         sendTheReq: function(searchTerm) {
-            // event.preventDefault();
-            console.log('searchTerm --> ', searchTerm)
+            // console.log('searchTerm --> ', searchTerm)
 
             if(!this.placeInput > 0) {
                 alert('enter a place to search');
@@ -96,9 +70,22 @@ const app = new Vue({
                 alert('select something to do')
             } else {
                 $.post('/searchIt', searchTerm, function(dataFromServer) {
+                    /* push results from api call into array */
+                    let resultsArr = dataFromServer.map((element, index) => {
+                        /* sets the zoom and map center based on the 0th result from the server */
+                        if(index === 0) {
+                            map.setZoom(13);
+                            map.setCenter(element.geometry.location);
+                        }
 
+                        /* adds the markers for the results */
+                        return (new google.maps.Marker({
+                            position: element.geometry.location,
+                            map: map
+                        }));
+                    })
 
-                    console.log('dataFromServer -->> ', dataFromServer)
+                    // console.log('dataFromServer -->> ', dataFromServer)
                 })
             }
         },
