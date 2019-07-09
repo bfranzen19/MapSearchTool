@@ -8,8 +8,17 @@
 
 .formData {
     font-size: 22px;
-    margin: 2px;
+    margin: 1% 0.5% 0 0.5%;
     border-radius: .25em;
+    text-align: center;
+}
+
+#placeInput {
+    width: 50%;
+}
+
+#toDo {
+    width: 22%;
     text-align: center;
 }
 

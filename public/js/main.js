@@ -63,20 +63,6 @@ $(document).ready(function() {
     });
 });
 
-// function getMap() {
-//     map = new google.maps.Map(document.getElementById('map'), {
-//           center: new google.maps.LatLng(-34.397, 150.644),
-//           zoom: 8,
-//           mapTypeId: 'satellite'
-//     });
-//
-//     /* autocomplete */
-//     let input = document.getElementById('placeInput')
-//     var autocomplete = new google.maps.places.Autocomplete(input);
-//     autocomplete.bindTo('bounds', map);
-// }
-
-
 
 
 
@@ -100,42 +86,24 @@ const app = new Vue({
         //     });
         // },
 
-        // setReq: function() {
-        //     let searchTerm = {
-        //         place: this.placeInput,
-        //         toDo: this.toDo
-        //     }
-        //     console.log('searchTerm ', searchTerm)
-        // },
-
-
         sendTheReq: function(searchTerm) {
-            event.preventDefault();
+            // event.preventDefault();
             console.log('searchTerm --> ', searchTerm)
 
-            // searchTerm = {
-            //     place: app.placeInput,
-            //     toDo: app.toDo
-            // }
-
-            // if(!this.placeInput > 0) {
-            //     alert('enter a place to search');
-            // } else if(!this.toDo) {
-            //     alert('select something to do')
-            // } else {
+            if(!this.placeInput > 0) {
+                alert('enter a place to search');
+            } else if(!this.toDo) {
+                alert('select something to do')
+            } else {
                 $.post('/searchIt', searchTerm, function(dataFromServer) {
 
 
                     console.log('dataFromServer -->> ', dataFromServer)
                 })
-            // }
+            }
         },
 
     },  // z methods
-
-    // beforeMount() {
-    //     this.getKeyBuildScript()  // runs the getMap() on load
-    // },  // z beforeMount()
 
 
 }) // z vue
