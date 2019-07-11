@@ -37,15 +37,26 @@ function getMap() {
 
     /* if the user doesn't allow location data to be accessed, the map will zoom out and center on the entire US */
     map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(39.2660537, -97.7499592),
-          zoom: 4,
-          mapTypeId: 'terrain'
+        center: new google.maps.LatLng(39.2660537, -97.7499592),
+        zoom: 4,
+        mapTypeIds: ['terrain', 'satellite', 'roadmap'],
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+            position: google.maps.ControlPosition.TOP_LEFT
+        },
+        fullscreenControl: false,
+
     });
 
     /* allows autocomplete */
     let input = document.getElementById('placeInput')
     var autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.bindTo('bounds', map);
+
+
+    /* click event listener */
+
 
 
 
@@ -89,7 +100,7 @@ $(document).ready(function() {
 });
 
 
-
+/* vue component for the search results */
 Vue.component('search-results', {
     template:`
     <div class="card border-secondary mb-3">
@@ -136,10 +147,20 @@ const app = new Vue({
                             }
 
                             /* adds the markers for the results */
-                            return (new google.maps.Marker({
+                            // return (new google.maps.Marker({
+                            //     position: element.geometry.location,
+                            //     map: map
+                            // }));
+
+                            let marker = new window.google.maps.Marker({
                                 position: element.geometry.location,
-                                map: map
-                            }));
+                                label: index.toString(),
+                                map:map,
+                            });
+
+                            window.google.maps.event.addListener(marker, 'click', function() {
+                                window.location.href = marker;
+                            })
                         })
 
                         let dataArr = [];
