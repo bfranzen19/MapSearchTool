@@ -1,9 +1,11 @@
 /*
 todo:
-    - click listener / pin popup
-    - further style map / markers
+    - close infowindow when another pin is clicked
+
 
 done:
+    - further style map / markers
+    - click listener / infowindow popup
     - sorts by rating
     - sorts by number of ratings
     - map loads correctly
@@ -39,28 +41,20 @@ function getMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(39.2660537, -97.7499592),
         zoom: 4,
-        mapTypeIds: ['terrain', 'satellite', 'roadmap'],
+        mapTypeIds: ['terrain', 'satellite', 'roadmap', 'hybrid'],
         mapTypeControl: true,
         mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
             position: google.maps.ControlPosition.TOP_LEFT
         },
         fullscreenControl: false,
-
+        gestureHandling: 'greedy',
     });
 
     /* allows autocomplete */
     let input = document.getElementById('placeInput')
     var autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.bindTo('bounds', map);
-
-
-    /* click event listener */
-
-
-
-
-
 }  // z getMap()
 
 
@@ -146,36 +140,53 @@ const app = new Vue({
                                 map.setCenter(element.geometry.location);
                             }
 
-                            /* adds the markers for the results */
-                            // return (new google.maps.Marker({
-                            //     position: element.geometry.location,
-                            //     map: map
-                            // }));
+                            /* creates a data array and pushes info for each result into each object */
+                            let dataArr = [];
+                            app.dataArr.push({
+                                id: element.id,
+                                name: element.name,
+                                rating: element.rating,
+                                open: element.opening_hours.open_now,
+                                address: element.formatted_address,
+                                price: element.price_level,
+                                totalRatings: element.user_ratings_total,
+                            })
 
+                            /* creates the marker and adds the label to the marker, starting at 1 instead of 0 */
+                            let label = index + 1
                             let marker = new window.google.maps.Marker({
                                 position: element.geometry.location,
-                                label: index.toString(),
+                                label: label.toString(),
                                 map:map,
                             });
 
-                            window.google.maps.event.addListener(marker, 'click', function() {
-                                window.location.href = marker;
+                            /* sets the content for the info window */
+                            let contentStr = `
+                                <div id="content">
+                                    <h6>${app.dataArr[index].name.toString()}</h6>
+                                </div>` +
+                                `<p>
+                                    rating: ${app.dataArr[index].rating.toString()} / 5
+                                <br/>
+                                    total ratings: ${app.dataArr[index].totalRatings.toString()}
+                                </p>`
+
+                            /* creates the info window with the content */
+                            let infowindow = new google.maps.InfoWindow({
+                                content: contentStr,
                             })
+
+                            /* creates the listener for the map markers and opens the info window */
+                            window.google.maps.event.addListener(marker, 'click', function() {
+                                infowindow.open(map, marker);
+                            })
+
+                            // console.log('-->> ', )
+
+
+
                         })
 
-                        let dataArr = [];
-
-                        for(let item of dataFromServer) {
-                            app.dataArr.push({
-                                id: item.id,
-                                name: item.name,
-                                rating: item.rating,
-                                open: item.opening_hours.open_now,
-                                address: item.formatted_address,
-                                price: item.price_level,
-                                totalRatings: item.user_ratings_total,
-                            })
-                        }
                     } else {
                         alert('sorry, no locations were found in that area. please try searching a new location or new type of location.')
                     }
