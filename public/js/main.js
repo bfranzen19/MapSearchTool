@@ -1,6 +1,6 @@
 /*
 todo:
-    - template the results below map
+    - get the location website (additional call to places api)
     - better drop down
     - click listener / pin popup
     - further style map / markers
@@ -31,7 +31,7 @@ function getMap() {
         navigator.geolocation.getCurrentPosition(function(position) {
             thisLoc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             map.setCenter(thisLoc);
-            map.setZoom(9);
+            map.setZoom(10);
         })
     }
 
@@ -46,7 +46,14 @@ function getMap() {
     let input = document.getElementById('placeInput')
     var autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.bindTo('bounds', map);
-}
+
+
+
+
+}  // z getMap()
+
+
+
 
 /* initalizes the map, grabs the key, builds the script, builds the query from user input, and calls the vue method to send the request to the server */
 $(document).ready(function() {
@@ -56,10 +63,14 @@ $(document).ready(function() {
 
         /* build the search query */
         let searchTerm = {
-            placeInput: $('#placeInput').val(),
-            toDo: $('#toDo').val(),
+            /* for use */
+            // placeInput: $('#placeInput').val(),
+            // toDo: $('#toDo').val(),
+
+            /* for testing */
+            placeInput: 'boulder, co',
+            toDo: 'bar',
         }
-        // console.log(searchTerm)
 
         /* send the searchTerm to the vue method to make the API call */
         app.sendTheReq(searchTerm);
@@ -78,19 +89,20 @@ $(document).ready(function() {
 });
 
 
+
 Vue.component('search-results', {
     template:`
     <div class="card border-secondary mb-3">
-        <div class="card-header"> {{ name }} </div>
+        <div class="big-head card-header"> <h4>{{ name }}</h4> <h6 class="card-title"> {{ address }} </h6> </div>
         <div class="card-body text-secondary">
-            <h5 class="card-title"> {{ formatted_address }} </h5>
-            <p class="card-text"> rating: {{ rating }} </p>
-            <p class="card-text"> {{ opening_hours }} </p>
-            <p class="card-text"> {{ price_level }} </p>
+            <p class="card-text"> rating: {{ rating }} / 5 </p>
+            <p class="card-text"> total user ratings: {{ totalratings }} </p>
+            <p class="card-text"> price level: {{ price }} / 4 </p>
+            <p class="card-text"> open now: {{ open }} </p>
         </div>
     </div>
     `,
-    props: ['id', 'name', 'rating', 'opening_hours', 'formatted_address', 'price_level']
+   props: ['id', 'name', 'rating', 'price', 'address', 'totalratings', 'open']
 })
 
 
@@ -131,26 +143,23 @@ const app = new Vue({
                         })
 
                         let dataArr = [];
-// ['name', 'rating', 'opening_hours', 'formatted_address', 'price_level']
+
                         for(let item of dataFromServer) {
                             app.dataArr.push({
                                 id: item.id,
                                 name: item.name,
                                 rating: item.rating,
-                                opening_hours: item.opening_hours,
-                                formatted_address: item.formatted_address,
-                                price_level: item.price_level,
+                                open: item.opening_hours.open_now,
+                                address: item.formatted_address,
+                                price: item.price_level,
+                                totalRatings: item.user_ratings_total,
                             })
                         }
-                        // console.log('data array -->> ', dataArr[0].name, dataArr[0].rating, dataArr[0].opening_hours, dataArr[0].formatted_address, dataArr[0].price_level);
-
-                        // console.log('full arr  ', dataArr)
-
                     } else {
                         alert('sorry, no locations were found in that area. please try searching a new location or new type of location.')
                     }
 
-                    console.log('dataFromServer -->> ', dataFromServer)
+                    // console.log('dataFromServer -->> ', dataFromServer)
                 })
             }
         },
