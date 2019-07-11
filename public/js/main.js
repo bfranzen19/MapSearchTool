@@ -1,11 +1,11 @@
 /*
 todo:
-    - get the location website (additional call to places api)
-    - better drop down
     - click listener / pin popup
     - further style map / markers
 
 done:
+    - sorts by rating
+    - sorts by number of ratings
     - map loads correctly
     - map loads in correct location (whether or not location data is
         accessible)

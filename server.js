@@ -35,14 +35,13 @@ app.post('/searchIt', function(req,res) {
             let bod = JSON.parse(body)
             let top20 = Array.from(bod.results);
 
+            /* sort by rating and total number of user ratings */
             for(let i=0 ; i<top20.length ; i++) {
                 top20.sort((a,b) => b.rating-a.rating)
-            }
-
-            for(let i=0 ; i<top20.length ; i++) {
                 top20.sort((a,b) => b.user_ratings_total-a.user_ratings_total)
             }
-            console.log(top20[0])
+
+            /* send the sorted top 20 locations to the front end */
             res.send(top20);
         }
     });
