@@ -57,14 +57,15 @@
             <!-- results -->
             <div id="results">
                 <search-results
-                v-for="item in dataArr"
-                v-bind:key="item.id"
-                v-bind:name="item.name"
-                v-bind:rating="item.rating"
-                v-bind:address="item.address"
-                v-bind:totalratings="item.totalRatings"
-                v-bind:open="item.open"
-                v-bind:price="item.price"
+                    v-for="item in dataArr"
+                    v-bind:index="item.index"
+                    v-bind:key="item.id"
+                    v-bind:name="item.name"
+                    v-bind:rating="item.rating"
+                    v-bind:address="item.address"
+                    v-bind:totalratings="item.totalRatings"
+                    v-bind:open="item.open"
+                    v-bind:price="item.price"
                 ></search-results>
             </div>
             <!-- z results -->

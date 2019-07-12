@@ -18,8 +18,11 @@ app.get('/', function(req, res) {
 });
 
 
+
 /* makes the api call to google maps */
 app.post('/searchIt', function(req,res) {
+    let totalUserRatings, ratings;
+
     /* builds the query string*/
     let query = req.body.toDo + ' ' + req.body.placeInput
 
@@ -37,12 +40,24 @@ app.post('/searchIt', function(req,res) {
 
             /* sort by rating and total number of user ratings */
             for(let i=0 ; i<top20.length ; i++) {
+                /* sorts by the number of total user ratings */
+                totalUserRatings = top20.sort((a,b) => b.user_ratings_total-a.user_ratings_total)
                 top20.sort((a,b) => b.rating-a.rating)
-                top20.sort((a,b) => b.user_ratings_total-a.user_ratings_total)
+
+                /* sorts by the highest rating to return the highest and most rated in the search area */
+                ratings =
+                totalUserRatings.sort((a,b) => b.rating-a.rating)
+
+                /* sorts by the cheapest rating. for personal travel research. */
+                // cheapest = ratings.sort((a,b) => a.price_level - b.price_level)
             }
 
             /* send the sorted top 20 locations to the front end */
-            res.send(top20);
+            res.send(ratings)
+
+            /* adding cheapest for the cheapest, highest, and most rated bar in any area. for personal travel research. */
+            // res.send(cheapest)
+
         }
     });
 })

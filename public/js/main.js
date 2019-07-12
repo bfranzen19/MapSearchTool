@@ -1,32 +1,7 @@
-/*
-todo:
-    - close infowindow when another pin is clicked
-
-
-done:
-    - further style map / markers
-    - click listener / infowindow popup
-    - sorts by rating
-    - sorts by number of ratings
-    - map loads correctly
-    - map loads in correct location (whether or not location data is
-        accessible)
-    - zooms to new area with search
-    - initial styling
-    - vue is up and running
-    - api key is stored elsewhere but available for API call
-    - autocomplete hooked up and working
-    - jquery used to grab user input and pass to vue
-    - makes api call and returns results
-    - handles for errors in no results found
-    - handles for blank input from the user into the searchTerm
-*/
-
-
-/* initializes variables */
+/* initialize necessary variables */
 let map, key;
 
-/* initializes the map */
+/* initialize the map */
 function getMap() {
     /* if the user allows location data to be accessed, it will zoom in on the approximate location */
     if(navigator.geolocation) {
@@ -41,7 +16,8 @@ function getMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(39.2660537, -97.7499592),
         zoom: 4,
-        mapTypeIds: ['terrain', 'satellite', 'roadmap', 'hybrid'],
+        mapTypeIds: ['hybrid', 'satellite', 'terrain', 'roadmap'],
+        // mapTypeId: 'hybrid',
         mapTypeControl: true,
         mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
@@ -58,23 +34,21 @@ function getMap() {
 }  // z getMap()
 
 
-
-
 /* initalizes the map, grabs the key, builds the script, builds the query from user input, and calls the vue method to send the request to the server */
 $(document).ready(function() {
+    // $('#searchAgain').hide();
+
     /* send the autocomplete data to vue */
     $('#searchBtn').on('click', function(event) {
-        event.preventDefault();
-
         /* build the search query */
         let searchTerm = {
             /* for use */
-            // placeInput: $('#placeInput').val(),
-            // toDo: $('#toDo').val(),
+            placeInput: $('#placeInput').val(),
+            toDo: $('#toDo').val(),
 
-            /* for testing */
-            placeInput: 'boulder, co',
-            toDo: 'bar',
+            /* test location and activity */
+            // placeInput: 'boulder, co',
+            // toDo: 'bar',
         }
 
         /* send the searchTerm to the vue method to make the API call */
@@ -98,7 +72,7 @@ $(document).ready(function() {
 Vue.component('search-results', {
     template:`
     <div class="card border-secondary mb-3">
-        <div class="big-head card-header"> <h4>{{ name }}</h4> <h6 class="card-title"> {{ address }} </h6> </div>
+        <div class="big-head card-header"><h4> {{index}}. {{ name }} </h4> <h6 class="card-title"> {{ address }} </h6> </div>
         <div class="card-body text-secondary">
             <p class="card-text"> rating: {{ rating }} / 5 </p>
             <p class="card-text"> total user ratings: {{ totalratings }} </p>
@@ -107,7 +81,7 @@ Vue.component('search-results', {
         </div>
     </div>
     `,
-   props: ['id', 'name', 'rating', 'price', 'address', 'totalratings', 'open']
+   props: ['index', 'id', 'name', 'rating', 'price', 'address', 'totalratings', 'open']
 })
 
 
@@ -132,17 +106,37 @@ const app = new Vue({
                 $.post('/searchIt', searchTerm, function(dataFromServer) {
                     /* error handling for the event that no locations are returned */
                     if(dataFromServer.length > 0) {
-                    /* push results from api call into array */
+                        /* hides the search button after results are received */
+                        $('#searchBtn').hide();
+
+                        /* creates the reload button */
+                        let reloadBtn = document.createElement('button');
+                        reloadBtn.type = 'button';
+                        reloadBtn.setAttribute('class', 'formData btn btn-outline-danger');
+                        reloadBtn.setAttribute('id', 'searchAgain')
+                        reloadBtn.innerHTML = 'reload';
+                        $('#form').append(reloadBtn);
+
+                        /* fires the page reload when clicked */
+                        $('#searchAgain').show().on('click', function(event) {
+                            location.reload();
+                        })
+
+                        /* push results from api call into array */
                         pinArr = dataFromServer.map((element, index) => {
                             /* sets the zoom and map center based on the 0th result from the server */
                             if(index === 0) {
                                 map.setZoom(12);
                                 map.setCenter(element.geometry.location);
+                                map.setMapTypeId('hybrid');
                             }
 
                             /* creates a data array and pushes info for each result into each object */
+                            let label = index + 1
                             let dataArr = [];
+
                             app.dataArr.push({
+                                index: label,
                                 id: element.id,
                                 name: element.name,
                                 rating: element.rating,
@@ -153,10 +147,12 @@ const app = new Vue({
                             })
 
                             /* creates the marker and adds the label to the marker, starting at 1 instead of 0 */
-                            let label = index + 1
                             let marker = new window.google.maps.Marker({
                                 position: element.geometry.location,
-                                label: label.toString(),
+                                label: {
+                                    text: label.toString(),
+                                    color: 'white',
+                                },
                                 map:map,
                             });
 
@@ -177,26 +173,17 @@ const app = new Vue({
                             })
 
                             /* creates the listener for the map markers and opens the info window */
-                            window.google.maps.event.addListener(marker, 'click', function() {
+                            window.google.maps.event.addListener(marker, 'click', function(event) {
                                 infowindow.open(map, marker);
                             })
-
-                            // console.log('-->> ', )
-
-
 
                         })
 
                     } else {
                         alert('sorry, no locations were found in that area. please try searching a new location or new type of location.')
                     }
-
-                    // console.log('dataFromServer -->> ', dataFromServer)
                 })
             }
-        },
-
+        },  // z sendTheReq()
     },  // z methods
-
-
 }) // z vue
