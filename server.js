@@ -42,7 +42,6 @@ app.post('/searchIt', function(req,res) {
             for(let i=0 ; i<top20.length ; i++) {
                 /* sorts by the number of total user ratings */
                 totalUserRatings = top20.sort((a,b) => b.user_ratings_total-a.user_ratings_total)
-                top20.sort((a,b) => b.rating-a.rating)
 
                 /* sorts by the highest rating to return the highest and most rated in the search area */
                 ratings =
