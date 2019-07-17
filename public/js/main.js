@@ -36,19 +36,26 @@ function getMap() {
 
 /* initalizes the map, grabs the key, builds the script, builds the query from user input, and calls the vue method to send the request to the server */
 $(document).ready(function() {
-    // $('#searchAgain').hide();
+    let searchTerm = {};
 
     /* send the autocomplete data to vue */
     $('#searchBtn').on('click', function(event) {
-        /* build the search query */
-        let searchTerm = {
-            /* for use */
-            placeInput: $('#placeInput').val(),
-            toDo: $('#toDo').val(),
+        if($('#toDo').val() === 'point of interest') {
+            searchTerm = {
+                placeInput: $('#placeInput').val(),
+                toDo: 'todo+in',
+            }
+        } else {
+            /* build the search query */
+            searchTerm = {
+                /* for use */
+                placeInput: $('#placeInput').val(),
+                toDo: $('#toDo').val(),
 
-            /* test location and activity */
-            // placeInput: 'boulder, co',
-            // toDo: 'bar',
+                /* test location and activity */
+                // placeInput: 'boulder, co',
+                // toDo: 'bar',
+            }
         }
 
         /* send the searchTerm to the vue method to make the API call */
@@ -76,8 +83,10 @@ Vue.component('search-results', {
         <div class="card-body text-secondary">
             <p class="card-text"> rating: {{ rating }} / 5 </p>
             <p class="card-text"> total user ratings: {{ totalratings }} </p>
-            <p class="card-text"> price level: {{ price }} / 4 </p>
-            <p class="card-text"> open now: {{ open }} </p>
+            <p class="card-text" v-if="price !== 'N/A'"> price level: {{ price }} / 4 </p>
+            <p class="card-text" v-else> price level: N/A </p>
+            <p class="card-text" v-if="open !== 'N/A'"> open now: {{ open }} </p>
+            <p class="card-text" v-else> open now: N/A </p>
         </div>
     </div>
     `,

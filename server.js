@@ -11,12 +11,10 @@ app.use(express.static('./public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
 /* sends the index.html file from the '/' route */
 app.get('/', function(req, res) {
     res.sendFile('./public/html/index.html', { root: './' });
 });
-
 
 
 /* makes the api call to google maps */
@@ -40,6 +38,16 @@ app.post('/searchIt', function(req,res) {
 
             /* sort by rating and total number of user ratings */
             for(let i=0 ; i<top20.length ; i++) {
+                if(top20[i] === undefined) {
+                    top20[i] = ' ';
+                } else if (top20[i].open_now === undefined || top20[i].open_now === '') {
+                    top20[i].open_now = 'N/A';
+                } else if (top20[i].price_level === undefined || top20[i].price_level === '') {
+                    top20[i].price_level = 'N/A';
+                }
+
+                console.log('-->>    ', top20[i].price_level)
+
                 /* sorts by the number of total user ratings */
                 totalUserRatings = top20.sort((a,b) => b.user_ratings_total-a.user_ratings_total)
 
@@ -48,26 +56,23 @@ app.post('/searchIt', function(req,res) {
                 totalUserRatings.sort((a,b) => b.rating-a.rating)
 
                 /* sorts by the cheapest rating. for personal travel research. */
-                // cheapest = ratings.sort((a,b) => a.price_level - b.price_level)
+                cheapest = ratings.sort((a,b) => a.price_level - b.price_level)
             }
 
             /* send the sorted top 20 locations to the front end */
-            res.send(ratings)
+            // res.send(ratings)
 
             /* adding cheapest for the cheapest, highest, and most rated bar in any area. for personal travel research. */
-            // res.send(cheapest)
+            res.send(cheapest)
 
         }
     });
 })
 
-
-
 /* accesses the api key */
 app.post('/getIt', function(req, res) {
     res.send({key:key})
 });
-
 
 
 /* -=-=-=-=-=-=- 404 catch -=-=-=-=-=-=- */
