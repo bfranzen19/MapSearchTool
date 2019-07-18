@@ -46,8 +46,6 @@ app.post('/searchIt', function(req,res) {
                     top20[i].price_level = 'N/A';
                 }
 
-                console.log('-->>    ', top20[i].price_level)
-
                 /* sorts by the number of total user ratings */
                 totalUserRatings = top20.sort((a,b) => b.user_ratings_total-a.user_ratings_total)
 
