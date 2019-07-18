@@ -1,5 +1,5 @@
 # MapSearchTool
-## this project is a simple MEVN stack application that utilizes google maps and places API to return the highest rated, most rated, cheapest bar / happy hour / restaurant / place of interest in the searched area.
+### this project is a simple MEVN stack application that utilizes google maps and places API to return the highest rated, most rated, cheapest bar / happy hour / restaurant / place of interest in the searched area.
 
 ### the application uses:
     * backend:
@@ -72,16 +72,19 @@ nodemon server.js
 - - - -
 
 ### start screen without accessing location data
-<img width="913" alt="Screen Shot 2019-07-18 at 2 07 08 PM" src="https://user-images.githubusercontent.com/25850024/61488410-6141bd00-a965-11e9-8e02-88616539864e.png">
+<img style="align:center" width="913" alt="Screen Shot 2019-07-18 at 2 07 08 PM" src="https://user-images.githubusercontent.com/25850024/61488410-6141bd00-a965-11e9-8e02-88616539864e.png">
 
+- - - -
 
 ### start screen accessing location data
-<img width="1049" alt="Screen Shot 2019-07-18 at 2 04 20 PM" src="https://user-images.githubusercontent.com/25850024/61488418-67379e00-a965-11e9-8af0-5198774e290a.png">
+<img style="align:center" width="1049" alt="Screen Shot 2019-07-18 at 2 04 20 PM" src="https://user-images.githubusercontent.com/25850024/61488418-67379e00-a965-11e9-8af0-5198774e290a.png">
 
+- - - -
 
 ### google autocomplete
-<img width="1048" alt="Screen Shot 2019-07-18 at 2 04 45 PM" src="https://user-images.githubusercontent.com/25850024/61488422-6999f800-a965-11e9-8f83-c1580995e69e.png">
+<img style="align:center" width="1048" alt="Screen Shot 2019-07-18 at 2 04 45 PM" src="https://user-images.githubusercontent.com/25850024/61488422-6999f800-a965-11e9-8f83-c1580995e69e.png">
 
+- - - -
 
 ### search results returned
-<img width="793" alt="Screen Shot 2019-07-18 at 2 05 27 PM" src="https://user-images.githubusercontent.com/25850024/61488427-6dc61580-a965-11e9-8697-52ddd18f7cd1.png">
+<img style="align:center" width="793" alt="Screen Shot 2019-07-18 at 2 05 27 PM" src="https://user-images.githubusercontent.com/25850024/61488427-6dc61580-a965-11e9-8697-52ddd18f7cd1.png">
